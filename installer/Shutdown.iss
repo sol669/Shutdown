@@ -23,7 +23,7 @@ DefaultDirName={autopf}\{#AppPublisher}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir=..\release
-OutputBaseFilename=Shutdown-Trey-Setup-v{#AppVersion}
+OutputBaseFilename=Shutdown-Trey-Setup-Offline-v{#AppVersion}
 SetupIconFile=..\Shutdown-WinUI3-Source\src\Shutdown\Assets\Off.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 WizardStyle=modern
@@ -38,7 +38,7 @@ AppMutex=sol669.Shutdown.Singleton
 MinVersion=10.0.17763
 VersionInfoVersion={#AppVersion}
 VersionInfoCompany={#AppPublisher}
-VersionInfoDescription={#AppName} installer
+VersionInfoDescription={#AppName} offline installer
 VersionInfoProductName={#AppName}
 
 [Languages]
