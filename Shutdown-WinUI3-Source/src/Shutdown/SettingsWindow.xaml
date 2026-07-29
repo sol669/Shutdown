@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     Title="Shutdown">
 
-    <Grid x:Name="RootGrid" Padding="24" RowSpacing="18">
+    <Grid x:Name="RootGrid" Padding="24" RowSpacing="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -20,7 +20,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Spacing="20" Padding="0,4,12,4">
+            <StackPanel Spacing="16" Padding="0,4,12,4">
                 <StackPanel Spacing="8">
                     <TextBlock x:Name="ConfirmationLabel" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ComboBox x:Name="ConfirmationCombo" HorizontalAlignment="Stretch" SelectionChanged="ConfirmationCombo_SelectionChanged">
@@ -29,6 +29,21 @@
                         <ComboBoxItem x:Name="CountdownItem" />
                     </ComboBox>
                 </StackPanel>
+
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="220" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock x:Name="DefaultActionLabel" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                        <TextBlock x:Name="DefaultActionHint" Opacity="0.68" />
+                    </StackPanel>
+                    <ComboBox x:Name="DefaultActionCombo" Grid.Column="1" HorizontalAlignment="Stretch">
+                        <ComboBoxItem x:Name="DefaultShutdownItem" />
+                        <ComboBoxItem x:Name="DefaultRestartItem" />
+                    </ComboBox>
+                </Grid>
 
                 <Grid x:Name="CountdownRow" ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
