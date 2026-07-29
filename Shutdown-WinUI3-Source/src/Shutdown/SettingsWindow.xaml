@@ -124,7 +124,7 @@
                 </Grid>
 
                 <StackPanel Spacing="3" Margin="0,6,0,0">
-                    <TextBlock Text="Shutdown Trey 1.0.0" FontWeight="SemiBold" />
+                    <TextBlock Text="Shutdown Trey 1.0.1" FontWeight="SemiBold" />
                     <TextBlock Text="sol669" Opacity="0.68" />
                     <HyperlinkButton Content="github.com/sol669/Shutdown"
                                      NavigateUri="https://github.com/sol669/Shutdown"
