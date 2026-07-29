@@ -26,17 +26,36 @@ jobs:
       - name: Restore
         run: dotnet restore Shutdown-WinUI3-Source/src/Shutdown/Shutdown.csproj -r win-x64
 
-      - name: Publish portable app
+      - name: Publish offline self-contained app
         run: dotnet publish Shutdown-WinUI3-Source/src/Shutdown/Shutdown.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:EnableMsixTooling=true -o publish
 
-      - name: Create portable ZIP
+      - name: Create offline portable ZIP
         shell: pwsh
-        run: Compress-Archive -Path publish\* -DestinationPath Shutdown-Trey-Portable-win-x64.zip -CompressionLevel Optimal
+        run: Compress-Archive -Path publish\* -DestinationPath Shutdown-Trey-Portable-Offline-win-x64.zip -CompressionLevel Optimal
+
+      - name: Publish standard framework-dependent app
+        run: >
+          dotnet publish Shutdown-WinUI3-Source/src/Shutdown/Shutdown.csproj
+          -c Release
+          -r win-x64
+          --self-contained false
+          -p:Platform=x64
+          -p:WindowsAppSDKSelfContained=false
+          -p:PublishSingleFile=false
+          -p:IncludeNativeLibrariesForSelfExtract=false
+          -p:IncludeAllContentForSelfExtract=false
+          -o publish-standard
+
+      - name: Create standard portable ZIP
+        shell: pwsh
+        run: |
+          Copy-Item installer\README-Portable.txt publish-standard\README-Portable.txt
+          Compress-Archive -Path publish-standard\* -DestinationPath Shutdown-Trey-Portable-win-x64.zip -CompressionLevel Optimal
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
 
-      - name: Build installer
+      - name: Build offline installer
         shell: pwsh
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
@@ -44,7 +63,31 @@ jobs:
             "/DPublishDir=${{ github.workspace }}\publish" `
             "${{ github.workspace }}\installer\Shutdown.iss"
 
-      - name: Upload portable artifact
+      - name: Build standard online installer
+        shell: pwsh
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+            /DAppVersion=1.0.0 `
+            "/DPublishDir=${{ github.workspace }}\publish-standard" `
+            "${{ github.workspace }}\installer\Shutdown-Online.iss"
+
+      - name: Upload offline portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shutdown-Portable-Offline-win-x64
+          path: Shutdown-Trey-Portable-Offline-win-x64.zip
+          if-no-files-found: error
+          compression-level: 9
+
+      - name: Upload offline installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shutdown-Trey-Setup-Offline-win-x64
+          path: release/Shutdown-Trey-Setup-Offline-v1.0.0.exe
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Upload standard portable artifact
         uses: actions/upload-artifact@v4
         with:
           name: Shutdown-Portable-win-x64
@@ -52,7 +95,7 @@ jobs:
           if-no-files-found: error
           compression-level: 9
 
-      - name: Upload installer artifact
+      - name: Upload standard installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: Shutdown-Trey-Setup-win-x64
@@ -68,5 +111,7 @@ jobs:
           files: |
             Shutdown-Trey-Portable-win-x64.zip
             release/Shutdown-Trey-Setup-v1.0.0.exe
+            Shutdown-Trey-Portable-Offline-win-x64.zip
+            release/Shutdown-Trey-Setup-Offline-v1.0.0.exe
           fail_on_unmatched_files: true
           overwrite_files: true
