@@ -20,7 +20,7 @@
     <PublishTrimmed>false</PublishTrimmed>
     <ApplicationIcon>Assets\Off.ico</ApplicationIcon>
     <AssemblyName>Shutdown</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>sol669</Authors>
     <Product>Shutdown Trey</Product>
     <Description>Minimal Windows 11 tray utility for shutdown, restart, and RDP disconnect.</Description>
