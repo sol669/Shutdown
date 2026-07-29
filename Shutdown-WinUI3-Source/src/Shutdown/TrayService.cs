@@ -42,7 +42,7 @@ public sealed class TrayService : IDisposable
             lpszClassName = className
         };
         NativeMethods.RegisterClassEx(ref wc);
-        _window = NativeMethods.CreateWindowEx(0, className, "Shutdown", 0, 0, 0, 0, 0,
+        _window = NativeMethods.CreateWindowEx(0, className, "Shutdown Trey", 0, 0, 0, 0, 0,
             nint.Zero, nint.Zero, instance, nint.Zero);
 
         string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Off.ico");
@@ -57,7 +57,7 @@ public sealed class TrayService : IDisposable
             uFlags = NativeMethods.NIF_MESSAGE | NativeMethods.NIF_ICON | NativeMethods.NIF_TIP,
             uCallbackMessage = TrayMessage,
             hIcon = _trayIcon,
-            szTip = "Shutdown",
+            szTip = "Shutdown Trey",
             szInfo = string.Empty,
             szInfoTitle = string.Empty
         };
