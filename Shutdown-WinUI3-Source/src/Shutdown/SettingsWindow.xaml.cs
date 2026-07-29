@@ -28,6 +28,7 @@ public sealed partial class SettingsWindow : Window
         try { SystemBackdrop = new MicaBackdrop(); } catch { }
 
         nint hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        NativeTheme.ApplyWindowTitleBar(_store.Current.Theme, hwnd);
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
         appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "Off.ico"));
