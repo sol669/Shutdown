@@ -4,7 +4,7 @@
 #define AppURL "https://github.com/sol669/Shutdown"
 
 #ifndef AppVersion
-  #define AppVersion "1.0.0"
+  #define AppVersion "1.0.1"
 #endif
 
 #ifndef PublishDir
