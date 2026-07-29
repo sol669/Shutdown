@@ -54,6 +54,7 @@ public sealed partial class SettingsWindow : Window
     {
         var s = _store.Current;
         ConfirmationCombo.SelectedIndex = (int)s.ConfirmationMode;
+        DefaultActionCombo.SelectedIndex = (int)s.DefaultAction;
         CountdownNumber.Value = s.CountdownSeconds;
         RdpMenuToggle.IsOn = s.ShowRdpMenu;
         HotkeyToggle.IsOn = s.EnableRdpHotkey;
@@ -72,6 +73,10 @@ public sealed partial class SettingsWindow : Window
         NoConfirmationItem.Content = ru ? "Без подтверждения" : "No confirmation";
         AskItem.Content = ru ? "Спрашивать Да / Нет" : "Ask Yes / No";
         CountdownItem.Content = ru ? "Подтверждение с таймером" : "Confirmation with countdown";
+        DefaultActionLabel.Text = ru ? "Действие по умолчанию" : "Default action";
+        DefaultActionHint.Text = ru ? "Запускается двойным кликом по значку" : "Runs when the tray icon is double-clicked";
+        DefaultShutdownItem.Content = ru ? "Завершение работы" : "Shut down";
+        DefaultRestartItem.Content = ru ? "Перезапуск" : "Restart";
         CountdownLabel.Text = ru ? "Обратный отсчёт" : "Countdown";
         CountdownHint.Text = ru ? "От 1 до 300 секунд" : "From 1 to 300 seconds";
         RdpMenuLabel.Text = ru ? "Показывать «Выйти из RDP»" : "Show “Disconnect RDP”";
@@ -112,6 +117,7 @@ public sealed partial class SettingsWindow : Window
         var value = new AppSettings
         {
             ConfirmationMode = (ConfirmationMode)Math.Clamp(ConfirmationCombo.SelectedIndex, 0, 2),
+            DefaultAction = (DefaultPowerAction)Math.Clamp(DefaultActionCombo.SelectedIndex, 0, 1),
             CountdownSeconds = Math.Clamp((int)(double.IsNaN(CountdownNumber.Value) ? 5 : CountdownNumber.Value), 1, 300),
             ShowRdpMenu = RdpMenuToggle.IsOn,
             EnableRdpHotkey = HotkeyToggle.IsOn,
