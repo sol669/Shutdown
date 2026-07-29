@@ -68,7 +68,7 @@ public sealed partial class ConfirmWindow : Window
         }
 
         const int logicalWidth = 540;
-        const int logicalHeight = 280;
+        int logicalHeight = _initialSeconds is null ? 190 : 220;
         uint dpi = GetDpiForWindow(hwnd);
         double scale = dpi > 0 ? dpi / 96.0 : 1.0;
         int width = (int)Math.Round(logicalWidth * scale);
