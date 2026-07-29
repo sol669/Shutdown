@@ -50,8 +50,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "https://aka.ms/dotnet/8.0/dotnet-runtime-win-x64.exe"; DestDir: "{tmp}"; DestName: "dotnet-runtime-8-win-x64.exe"; Flags: external download ignoreversion; Check: not IsDotNet8Installed
-Source: "https://aka.ms/windowsappsdk/2.3/latest/windowsappruntimeinstall-x64.exe"; DestDir: "{tmp}"; DestName: "windowsappruntimeinstall-x64.exe"; Flags: external download ignoreversion; Check: not IsWindowsAppRuntimeInstalled
+Source: "https://aka.ms/dotnet/8.0/dotnet-runtime-win-x64.exe"; DestDir: "{tmp}"; DestName: "dotnet-runtime-8-win-x64.exe"; ExternalSize: 28639808; Flags: external download ignoreversion; Check: not IsDotNet8Installed
+Source: "https://aka.ms/windowsappsdk/2.3/latest/windowsappruntimeinstall-x64.exe"; DestDir: "{tmp}"; DestName: "windowsappruntimeinstall-x64.exe"; ExternalSize: 113192760; Flags: external download ignoreversion; Check: not IsWindowsAppRuntimeInstalled
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
