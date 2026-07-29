@@ -55,10 +55,10 @@ public sealed partial class ConfirmWindow : Window
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
         appWindow.Resize(new Windows.Graphics.SizeInt32(520, 250));
-        appWindow.IsAlwaysOnTop = true;
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
+            presenter.IsAlwaysOnTop = true;
             presenter.IsResizable = false;
             presenter.IsMaximizable = false;
             presenter.IsMinimizable = false;
