@@ -22,7 +22,6 @@ AppUpdatesURL={#AppURL}/releases
 DefaultDirName={autopf}\{#AppPublisher}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
-LicenseFile=..\LICENSE
 OutputDir=..\release
 OutputBaseFilename=Shutdown-Trey-Setup-v{#AppVersion}
 SetupIconFile=..\Shutdown-WinUI3-Source\src\Shutdown\Assets\Off.ico
