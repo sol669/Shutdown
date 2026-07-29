@@ -118,7 +118,8 @@ public sealed class TrayService : IDisposable
         try
         {
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRestart, Strings.Restart);
-            NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING | NativeMethods.MF_DEFAULT, IdShutdown, Strings.Shutdown);
+            NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdShutdown, Strings.Shutdown);
+            NativeMethods.SetMenuDefaultItem(menu, IdShutdown, 0);
             if (_settings.Current.ShowRdpMenu)
                 NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRdp,
                     Strings.DisconnectRdp + "\tCtrl+Alt+Shift+Q");
