@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace ShutdownApp;
@@ -57,7 +58,6 @@ public sealed partial class ConfirmWindow : Window
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
         appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "Off.ico"));
-        appWindow.Resize(new Windows.Graphics.SizeInt32(520, 250));
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
@@ -66,6 +66,21 @@ public sealed partial class ConfirmWindow : Window
             presenter.IsMaximizable = false;
             presenter.IsMinimizable = false;
         }
+
+        const int logicalWidth = 540;
+        const int logicalHeight = 280;
+        uint dpi = GetDpiForWindow(hwnd);
+        double scale = dpi > 0 ? dpi / 96.0 : 1.0;
+        int width = (int)Math.Round(logicalWidth * scale);
+        int height = (int)Math.Round(logicalHeight * scale);
+
+        DisplayArea displayArea = DisplayArea.GetFromWindowId(id, DisplayAreaFallback.Primary);
+        Windows.Graphics.RectInt32 workArea = displayArea.WorkArea;
+        appWindow.MoveAndResize(new Windows.Graphics.RectInt32(
+            workArea.X + Math.Max(0, (workArea.Width - width) / 2),
+            workArea.Y + Math.Max(0, (workArea.Height - height) / 2),
+            width,
+            height));
     }
 
     public static async Task<bool> ShowAsync(bool restart, int? seconds)
@@ -113,4 +128,7 @@ public sealed partial class ConfirmWindow : Window
         _result.TrySetResult(value);
         Close();
     }
+
+    [DllImport("user32.dll")]
+    private static extern uint GetDpiForWindow(nint hwnd);
 }
