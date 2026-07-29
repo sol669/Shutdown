@@ -90,7 +90,8 @@ public sealed class TrayService : IDisposable
                 if (mouseMessage == NativeMethods.WM_RBUTTONUP)
                     ShowMenu();
                 else if (mouseMessage == NativeMethods.WM_LBUTTONDBLCLK)
-                    _dispatcher.TryEnqueue(() => _ = PerformPowerActionAsync(false));
+                    _dispatcher.TryEnqueue(() =>
+                        _ = PerformPowerActionAsync(_settings.Current.DefaultAction == DefaultPowerAction.Restart));
                 return nint.Zero;
             }
 
@@ -119,7 +120,10 @@ public sealed class TrayService : IDisposable
         {
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRestart, Strings.Restart);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdShutdown, Strings.Shutdown);
-            NativeMethods.SetMenuDefaultItem(menu, IdShutdown, 0);
+            uint defaultCommand = _settings.Current.DefaultAction == DefaultPowerAction.Restart
+                ? IdRestart
+                : IdShutdown;
+            NativeMethods.SetMenuDefaultItem(menu, defaultCommand, 0);
             if (_settings.Current.ShowRdpMenu)
                 NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRdp,
                     Strings.DisconnectRdp + "\tCtrl+Alt+Shift+Q");
