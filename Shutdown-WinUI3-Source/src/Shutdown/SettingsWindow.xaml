@@ -5,9 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Shutdown">
+    Title="Shutdown Trey">
 
-    <Grid x:Name="RootGrid" Padding="24" RowSpacing="16">
+    <Grid x:Name="RootGrid" Padding="24" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -20,7 +20,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Spacing="16" Padding="0,4,12,4">
+            <StackPanel Spacing="12" Padding="0,4,12,4">
                 <StackPanel Spacing="8">
                     <TextBlock x:Name="ConfirmationLabel" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ComboBox x:Name="ConfirmationCombo" HorizontalAlignment="Stretch" SelectionChanged="ConfirmationCombo_SelectionChanged">
@@ -124,7 +124,7 @@
                 </Grid>
 
                 <StackPanel Spacing="3" Margin="0,6,0,0">
-                    <TextBlock Text="Shutdown 1.0.0" FontWeight="SemiBold" />
+                    <TextBlock Text="Shutdown Trey 1.0.0" FontWeight="SemiBold" />
                     <TextBlock Text="sol669" Opacity="0.68" />
                     <HyperlinkButton Content="github.com/sol669/Shutdown"
                                      NavigateUri="https://github.com/sol669/Shutdown"
