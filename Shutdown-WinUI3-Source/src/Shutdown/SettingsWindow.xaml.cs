@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace ShutdownApp;
@@ -29,6 +30,7 @@ public sealed partial class SettingsWindow : Window
         nint hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
+        appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "Off.ico"));
 
         const int logicalWidth = 680;
         const int logicalHeight = 760;
