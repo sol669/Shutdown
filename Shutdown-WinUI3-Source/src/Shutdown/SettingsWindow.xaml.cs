@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
+using System.Runtime.InteropServices;
 
 namespace ShutdownApp;
 
@@ -24,14 +25,23 @@ public sealed partial class SettingsWindow : Window
     private void ConfigureWindow()
     {
         try { SystemBackdrop = new MicaBackdrop(); } catch { }
+
         nint hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
-        appWindow.Resize(new Windows.Graphics.SizeInt32(680, 760));
+
+        const int logicalWidth = 680;
+        const int logicalHeight = 760;
+        uint dpi = GetDpiForWindow(hwnd);
+        double scale = dpi > 0 ? dpi / 96.0 : 1.0;
+        appWindow.Resize(new Windows.Graphics.SizeInt32(
+            (int)Math.Round(logicalWidth * scale),
+            (int)Math.Round(logicalHeight * scale)));
+
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
-            presenter.IsResizable = true;
+            presenter.IsResizable = false;
             presenter.IsMaximizable = false;
             presenter.IsMinimizable = false;
         }
@@ -112,4 +122,6 @@ public sealed partial class SettingsWindow : Window
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
+    [DllImport("user32.dll")]
+    private static extern uint GetDpiForWindow(nint hwnd);
 }
