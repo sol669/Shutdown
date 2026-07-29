@@ -91,6 +91,8 @@ internal static class NativeMethods
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     internal static extern bool AppendMenu(nint hMenu, uint uFlags, nuint uIDNewItem, string? lpNewItem);
     [DllImport("user32.dll")]
+    internal static extern bool SetMenuDefaultItem(nint hMenu, uint uItem, uint fByPos);
+    [DllImport("user32.dll")]
     internal static extern uint TrackPopupMenu(nint hMenu, uint uFlags, int x, int y, int nReserved, nint hWnd, nint prcRect);
     [DllImport("user32.dll")]
     internal static extern bool DestroyMenu(nint hMenu);
