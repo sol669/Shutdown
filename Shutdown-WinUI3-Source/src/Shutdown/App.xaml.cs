@@ -7,6 +7,7 @@ namespace ShutdownApp;
 public partial class App : Application
 {
     private Mutex? _singleInstance;
+    private Window? _lifetimeWindow;
     internal static TrayService? Tray { get; private set; }
     internal static SettingsStore Settings { get; } = new();
 
@@ -31,8 +32,18 @@ public partial class App : Application
 
         Settings.Load();
         Settings.ApplyAutostart();
+        CreateLifetimeWindow();
         Tray = new TrayService(Settings);
         Tray.Initialize();
+    }
+
+    private void CreateLifetimeWindow()
+    {
+        _lifetimeWindow = new Window();
+        _lifetimeWindow.AppWindow.IsShownInSwitchers = false;
+        _lifetimeWindow.AppWindow.Move(new Windows.Graphics.PointInt32(-32000, -32000));
+        _lifetimeWindow.Activate();
+        _lifetimeWindow.AppWindow.Hide();
     }
 
     internal static void Quit()
