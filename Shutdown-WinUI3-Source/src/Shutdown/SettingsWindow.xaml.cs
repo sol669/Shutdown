@@ -83,7 +83,7 @@ public sealed partial class SettingsWindow : Window
         RdpMenuHint.Text = ru ? "Добавляет команду в меню трея" : "Adds the command to the tray menu";
         HotkeyLabel.Text = ru ? "Горячая клавиша выхода из RDP" : "RDP disconnect hotkey";
         AutostartLabel.Text = ru ? "Запускать вместе с Windows" : "Start with Windows";
-        AutostartHint.Text = ru ? "Запускает Shutdown после входа в систему" : "Starts Shutdown after sign-in";
+        AutostartHint.Text = ru ? "Запускает Shutdown Trey после входа в систему" : "Starts Shutdown Trey after sign-in";
         ThemeLabel.Text = ru ? "Тема" : "Theme";
         SystemThemeItem.Content = ru ? "Как в Windows" : "Use Windows setting";
         LightThemeItem.Content = ru ? "Светлая" : "Light";
