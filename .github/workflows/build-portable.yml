@@ -1,0 +1,37 @@
+name: Build portable
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Shutdown-WinUI3-Source/src/Shutdown/Shutdown.csproj -r win-x64
+
+      - name: Publish portable app
+        run: dotnet publish Shutdown-WinUI3-Source/src/Shutdown/Shutdown.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:EnableMsixTooling=true -o publish
+
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shutdown-Portable-win-x64
+          path: publish/**
+          if-no-files-found: error
+          compression-level: 9
