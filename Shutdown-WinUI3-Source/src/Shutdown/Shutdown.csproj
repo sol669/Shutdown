@@ -22,7 +22,7 @@
     <AssemblyName>Shutdown</AssemblyName>
     <Version>1.0.0</Version>
     <Authors>sol669</Authors>
-    <Product>Shutdown</Product>
+    <Product>Shutdown Trey</Product>
     <Description>Minimal Windows 11 tray utility for shutdown, restart, and RDP disconnect.</Description>
   </PropertyGroup>
 
