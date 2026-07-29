@@ -132,3 +132,4 @@ public sealed partial class ConfirmWindow : Window
     [DllImport("user32.dll")]
     private static extern uint GetDpiForWindow(nint hwnd);
 }
+
