@@ -7,6 +7,12 @@ public enum ConfirmationMode
     Countdown
 }
 
+public enum DefaultPowerAction
+{
+    Shutdown,
+    Restart
+}
+
 public enum AppTheme
 {
     System,
@@ -23,6 +29,7 @@ public enum AppLanguage
 public sealed class AppSettings
 {
     public ConfirmationMode ConfirmationMode { get; set; } = ConfirmationMode.Countdown;
+    public DefaultPowerAction DefaultAction { get; set; } = DefaultPowerAction.Shutdown;
     public int CountdownSeconds { get; set; } = 5;
     public bool ShowRdpMenu { get; set; } = true;
     public bool EnableRdpHotkey { get; set; } = true;
