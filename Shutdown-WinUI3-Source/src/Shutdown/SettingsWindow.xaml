@@ -19,7 +19,7 @@
             <TextBlock x:Name="SubtitleText" Opacity="0.68" TextWrapping="Wrap" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
             <StackPanel Spacing="20" Padding="0,4,12,4">
                 <StackPanel Spacing="8">
                     <TextBlock x:Name="ConfirmationLabel" Style="{StaticResource BodyStrongTextBlockStyle}" />
