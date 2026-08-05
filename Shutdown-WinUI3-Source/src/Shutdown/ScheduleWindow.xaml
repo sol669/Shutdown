@@ -12,7 +12,7 @@
             <ComboBox x:Name="UnitCombo" Grid.Column="1" SelectedIndex="0" HorizontalAlignment="Stretch"><ComboBoxItem x:Name="MinutesItem"/><ComboBoxItem x:Name="HoursItem"/></ComboBox>
         </Grid>
         <Grid x:Name="DateTimePanel" Grid.Row="1" ColumnSpacing="12">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="180"/></Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="220"/></Grid.ColumnDefinitions>
             <DatePicker x:Name="ActionDate" HorizontalAlignment="Stretch"/>
             <TimePicker x:Name="ActionTime" Grid.Column="1" ClockIdentifier="24HourClock" HorizontalAlignment="Stretch"/>
         </Grid>

@@ -40,13 +40,13 @@ def app_icon(size=1024):
 def glyph_icon(code, color, scheduled=False, hibernate=False):
     size=512
     im=Image.new("RGBA",(size,size),(0,0,0,0)); d=ImageDraw.Draw(im)
-    font_size = 270 if scheduled and hibernate else 300 if hibernate else 285 if scheduled else 360
+    font_size = 325 if scheduled and hibernate else 400 if hibernate else 340 if scheduled else 430
     font=ImageFont.truetype(str(FONT), font_size)
     text=chr(code)
     box=d.textbbox((0,0),text,font=font)
     x=(size-(box[2]-box[0]))//2-box[0]; y=(size-(box[3]-box[1]))//2-box[1]
-    if scheduled: x-=55; y-=45
-    elif hibernate: x-=45; y-=25
+    if scheduled: x-=58; y-=48
+    elif hibernate: x-=50; y-=28
     d.text((x,y),text,font=font,fill=color)
     if hibernate:
         d.line((375,315,375,400), fill=color, width=24)

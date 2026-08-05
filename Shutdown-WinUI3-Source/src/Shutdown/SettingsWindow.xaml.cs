@@ -36,8 +36,8 @@ public sealed partial class SettingsWindow : Window
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
         appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "ShutdownTrey.ico"));
 
-        const int logicalWidth = 680;
-        const int logicalHeight = 810;
+        const int logicalWidth = 700;
+        const int logicalHeight = 840;
         double scale = Math.Max(1, GetDpiForWindow(hwnd) / 96.0);
         int width = (int)Math.Round(logicalWidth * scale);
         int height = (int)Math.Round(logicalHeight * scale);
@@ -76,6 +76,7 @@ public sealed partial class SettingsWindow : Window
         LanguageCombo.SelectedIndex = s.Language == AppLanguage.Russian ? 0 : 1;
         RebuildDefaultActions(s.DefaultAction);
         UpdateCountdownState();
+        UpdateToggleStates();
     }
 
     private void ApplyLanguage()
@@ -85,21 +86,20 @@ public sealed partial class SettingsWindow : Window
         ActionsSection.Text = ru ? "ДЕЙСТВИЯ" : "ACTIONS";
         ShutdownLabel.Text = Strings.ActionName(PowerActionKind.Shutdown);
         RestartLabel.Text = Strings.ActionName(PowerActionKind.Restart);
-        SleepLabel.Text = Strings.ActionName(PowerActionKind.Sleep) + (!SleepToggle.IsEnabled ? (ru ? " — недоступно" : " — unavailable") : "");
-        HibernateLabel.Text = Strings.ActionName(PowerActionKind.Hibernate) + (!HibernateToggle.IsEnabled ? (ru ? " — недоступно" : " — unavailable") : "");
+        SleepLabel.Text = Strings.ActionName(PowerActionKind.Sleep);
+        HibernateLabel.Text = Strings.ActionName(PowerActionKind.Hibernate);
         LockLabel.Text = Strings.ActionName(PowerActionKind.Lock);
         DefaultActionLabel.Text = ru ? "Действие по умолчанию" : "Default action";
-        ConfirmationSection.Text = ru ? "ПОДТВЕРЖДЕНИЕ" : "CONFIRMATION";
-        ConfirmationLabel.Text = ru ? "Режим" : "Mode";
+        BehaviorSection.Text = ru ? "ПОВЕДЕНИЕ" : "BEHAVIOR";
+        ConfirmationLabel.Text = ru ? "Подтверждение" : "Confirmation";
         NoConfirmationItem.Content = ru ? "Без подтверждения" : "No confirmation";
         AskItem.Content = ru ? "Спрашивать Да / Нет" : "Ask Yes / No";
         CountdownItem.Content = ru ? "С обратным отсчётом" : "With countdown";
         CountdownLabel.Text = ru ? "Обратный отсчёт, сек." : "Countdown, sec.";
-        ScheduledSection.Text = ru ? "ОТЛОЖЕННЫЕ ДЕЙСТВИЯ" : "SCHEDULED ACTIONS";
-        ScheduledMenuLabel.Text = ru ? "Показывать в меню" : "Show in menu";
-        IntegrationSection.Text = ru ? "ИНТЕГРАЦИЯ" : "INTEGRATION";
-        RdpLabel.Text = ru ? "Выход из RDP" : "RDP disconnect";
-        AutostartLabel.Text = ru ? "Автозапуск" : "Start with Windows";
+        ScheduledMenuLabel.Text = ru ? "Отложенные действия в меню" : "Scheduled actions in menu";
+        SystemSection.Text = ru ? "СИСТЕМА" : "SYSTEM";
+        RdpLabel.Text = ru ? "Выход из RDP и Ctrl+Alt+Shift+Q" : "RDP disconnect and Ctrl+Alt+Shift+Q";
+        AutostartLabel.Text = ru ? "Запускать вместе с Windows" : "Start with Windows";
         InterfaceSection.Text = ru ? "ИНТЕРФЕЙС" : "INTERFACE";
         ThemeLabel.Text = ru ? "Тема" : "Theme";
         SystemThemeItem.Content = ru ? "Как в Windows" : "Use Windows setting";
@@ -108,6 +108,7 @@ public sealed partial class SettingsWindow : Window
         LanguageLabel.Text = ru ? "Язык" : "Language";
         CancelButton.Content = Strings.Cancel;
         SaveButton.Content = ru ? "Сохранить" : "Save";
+        UpdateToggleStates();
     }
 
     private EnabledPowerActions SelectedActions()
@@ -135,10 +136,37 @@ public sealed partial class SettingsWindow : Window
 
     private void ActionToggle_Toggled(object sender, RoutedEventArgs e)
     {
+        UpdateToggleStates();
         if (_loading) return;
         PowerActionKind preferred = DefaultActionCombo.SelectedItem is ComboBoxItem item && item.Tag is PowerActionKind action
             ? action : _store.Current.DefaultAction;
         RebuildDefaultActions(preferred);
+    }
+
+    private void OptionToggle_Toggled(object sender, RoutedEventArgs e) => UpdateToggleStates();
+
+    private void UpdateToggleStates()
+    {
+        if (ShutdownState is null) return;
+        SetToggleState(ShutdownState, ShutdownToggle);
+        SetToggleState(RestartState, RestartToggle);
+        SetToggleState(SleepState, SleepToggle);
+        SetToggleState(HibernateState, HibernateToggle);
+        SetToggleState(LockState, LockToggle);
+        SetToggleState(ScheduledMenuState, ScheduledMenuToggle);
+        SetToggleState(RdpState, RdpToggle);
+        SetToggleState(AutostartState, AutostartToggle);
+    }
+
+    private void SetToggleState(TextBlock state, ToggleSwitch toggle)
+    {
+        bool ru = _store.Current.Language == AppLanguage.Russian;
+        state.Text = !toggle.IsEnabled
+            ? (ru ? "Недоступно" : "Unavailable")
+            : toggle.IsOn
+                ? (ru ? "Вкл." : "On")
+                : (ru ? "Откл." : "Off");
+        state.Opacity = toggle.IsEnabled ? 0.72 : 0.45;
     }
 
     private void ConfirmationCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateCountdownState();

@@ -1,4 +1,4 @@
-Shutdown Trey Portable 1.1.0
+Shutdown Trey Portable 1.1.1
 ============================
 
 Это стандартная компактная portable-версия.

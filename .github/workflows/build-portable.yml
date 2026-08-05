@@ -59,7 +59,7 @@ jobs:
         shell: pwsh
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
-            /DAppVersion=1.1.0 `
+            /DAppVersion=1.1.1 `
             "/DPublishDir=${{ github.workspace }}\publish" `
             "${{ github.workspace }}\installer\Shutdown.iss"
 
@@ -67,7 +67,7 @@ jobs:
         shell: pwsh
         run: |
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
-            /DAppVersion=1.1.0 `
+            /DAppVersion=1.1.1 `
             "/DPublishDir=${{ github.workspace }}\publish-standard" `
             "${{ github.workspace }}\installer\Shutdown-Online.iss"
 
@@ -83,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Shutdown-Trey-Setup-Offline-win-x64
-          path: release/Shutdown-Trey-Setup-Offline-v1.1.0.exe
+          path: release/Shutdown-Trey-Setup-Offline-v1.1.1.exe
           if-no-files-found: error
           compression-level: 0
 
@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Shutdown-Trey-Setup-win-x64
-          path: release/Shutdown-Trey-Setup-v1.1.0.exe
+          path: release/Shutdown-Trey-Setup-v1.1.1.exe
           if-no-files-found: error
           compression-level: 0
 
@@ -107,11 +107,11 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.1.0' }}
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.1.1' }}
           files: |
             Shutdown-Trey-Portable-win-x64.zip
-            release/Shutdown-Trey-Setup-v1.1.0.exe
+            release/Shutdown-Trey-Setup-v1.1.1.exe
             Shutdown-Trey-Portable-Offline-win-x64.zip
-            release/Shutdown-Trey-Setup-Offline-v1.1.0.exe
+            release/Shutdown-Trey-Setup-Offline-v1.1.1.exe
           fail_on_unmatched_files: true
           overwrite_files: true

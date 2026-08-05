@@ -60,7 +60,7 @@ public sealed partial class ScheduleWindow : Window
             presenter.IsMinimizable = false;
         }
         double scale = Math.Max(1, GetDpiForWindow(hwnd) / 96.0);
-        int width = (int)Math.Round(540 * scale);
+        int width = (int)Math.Round(680 * scale);
         int height = (int)Math.Round(225 * scale);
         NativeMethods.GetCursorPos(out var cursor);
         DisplayArea area = DisplayArea.GetFromPoint(new Windows.Graphics.PointInt32(cursor.X, cursor.Y), DisplayAreaFallback.Primary);
