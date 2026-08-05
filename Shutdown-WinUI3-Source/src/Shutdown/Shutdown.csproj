@@ -18,12 +18,12 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <PublishTrimmed>false</PublishTrimmed>
-    <ApplicationIcon>Assets\Off.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\ShutdownTrey.ico</ApplicationIcon>
     <AssemblyName>Shutdown</AssemblyName>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Authors>sol669</Authors>
     <Product>Shutdown Trey</Product>
-    <Description>Minimal Windows 11 tray utility for shutdown, restart, and RDP disconnect.</Description>
+    <Description>Native Windows tray utility for immediate and scheduled power actions.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +32,10 @@
 
   <ItemGroup>
     <Content Include="Assets\*.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Assets\ShutdownTrey.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

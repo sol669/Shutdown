@@ -14,15 +14,17 @@ public sealed partial class ConfirmWindow : Window
     private readonly TaskCompletionSource<bool> _result = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly DispatcherTimer? _timer;
     private readonly int? _initialSeconds;
+    private readonly DateTime? _deadline;
     private int _remaining;
     private bool _completed;
 
-    private ConfirmWindow(bool restart, int? seconds)
+    private ConfirmWindow(string question, int? seconds)
     {
         InitializeComponent();
         _initialSeconds = seconds;
         _remaining = seconds ?? 0;
-        QuestionText.Text = restart ? Strings.ConfirmRestart : Strings.ConfirmShutdown;
+        _deadline = seconds is null ? null : DateTime.Now.AddSeconds(seconds.Value);
+        QuestionText.Text = question;
         YesButton.Content = Strings.Yes;
         NoButton.Content = Strings.No;
 
@@ -57,7 +59,7 @@ public sealed partial class ConfirmWindow : Window
         NativeTheme.ApplyWindowTitleBar(App.Settings.Current.Theme, hwnd);
         WindowId id = Win32Interop.GetWindowIdFromWindow(hwnd);
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
-        appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "Off.ico"));
+        appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "ShutdownTrey.ico"));
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
@@ -74,7 +76,9 @@ public sealed partial class ConfirmWindow : Window
         int width = (int)Math.Round(logicalWidth * scale);
         int height = (int)Math.Round(logicalHeight * scale);
 
-        DisplayArea displayArea = DisplayArea.GetFromWindowId(id, DisplayAreaFallback.Primary);
+        NativeMethods.GetCursorPos(out var cursor);
+        DisplayArea displayArea = DisplayArea.GetFromPoint(
+            new Windows.Graphics.PointInt32(cursor.X, cursor.Y), DisplayAreaFallback.Primary);
         Windows.Graphics.RectInt32 workArea = displayArea.WorkArea;
         appWindow.MoveAndResize(new Windows.Graphics.RectInt32(
             workArea.X + Math.Max(0, (workArea.Width - width) / 2),
@@ -83,16 +87,23 @@ public sealed partial class ConfirmWindow : Window
             height));
     }
 
-    public static async Task<bool> ShowAsync(bool restart, int? seconds)
+    public static async Task<bool> ShowAsync(PowerActionKind action, int? seconds)
     {
-        var window = new ConfirmWindow(restart, seconds);
+        var window = new ConfirmWindow(Strings.ConfirmQuestion(action), seconds);
+        window.Activate();
+        return await window._result.Task;
+    }
+
+    public static async Task<bool> ShowMessageAsync(string question)
+    {
+        var window = new ConfirmWindow(question, null);
         window.Activate();
         return await window._result.Task;
     }
 
     private void Timer_Tick(object? sender, object e)
     {
-        _remaining--;
+        _remaining = _deadline is null ? 0 : (int)Math.Ceiling((_deadline.Value - DateTime.Now).TotalSeconds);
         if (_remaining <= 0)
         {
             Complete(true);

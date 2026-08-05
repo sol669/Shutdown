@@ -9,12 +9,16 @@ internal static class NativeMethods
     internal const uint WM_COMMAND = 0x0111;
     internal const uint WM_DESTROY = 0x0002;
     internal const uint WM_HOTKEY = 0x0312;
+    internal const uint WM_POWERBROADCAST = 0x0218;
+    internal const uint PBT_APMRESUMEAUTOMATIC = 0x0012;
     internal const uint WM_LBUTTONDBLCLK = 0x0203;
     internal const uint WM_RBUTTONUP = 0x0205;
     internal const uint TPM_RIGHTBUTTON = 0x0002;
     internal const uint TPM_RETURNCMD = 0x0100;
     internal const uint MF_STRING = 0x0000;
     internal const uint MF_SEPARATOR = 0x0800;
+    internal const uint MF_GRAYED = 0x0001;
+    internal const uint MF_POPUP = 0x0010;
     internal const uint MF_DEFAULT = 0x1000;
     internal const uint MOD_ALT = 0x0001;
     internal const uint MOD_CONTROL = 0x0002;
@@ -23,6 +27,8 @@ internal static class NativeMethods
     internal const uint NIF_MESSAGE = 0x0001;
     internal const uint NIF_ICON = 0x0002;
     internal const uint NIF_TIP = 0x0004;
+    internal const uint NIF_INFO = 0x0010;
+    internal const uint NIIF_INFO = 0x00000001;
     internal const uint NIM_ADD = 0x00000000;
     internal const uint NIM_MODIFY = 0x00000001;
     internal const uint NIM_DELETE = 0x00000002;

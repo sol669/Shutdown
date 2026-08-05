@@ -18,8 +18,41 @@ public static class SystemActions
     private const uint TOKEN_QUERY = 0x0008;
     private const uint SE_PRIVILEGE_ENABLED = 0x00000002;
 
-    public static void Shutdown() => ExitWindows(EWX_SHUTDOWN | EWX_POWEROFF | EWX_FORCEIFHUNG);
-    public static void Restart() => ExitWindows(EWX_REBOOT | EWX_FORCEIFHUNG);
+    public static bool IsAvailable(PowerActionKind action) => action switch
+    {
+        PowerActionKind.Sleep => IsPwrSuspendAllowed(),
+        PowerActionKind.Hibernate => IsPwrHibernateAllowed(),
+        _ => true
+    };
+
+    public static void Execute(PowerActionKind action)
+    {
+        switch (action)
+        {
+            case PowerActionKind.Shutdown:
+                ExitWindows(EWX_SHUTDOWN | EWX_POWEROFF | EWX_FORCEIFHUNG);
+                break;
+            case PowerActionKind.Restart:
+                ExitWindows(EWX_REBOOT | EWX_FORCEIFHUNG);
+                break;
+            case PowerActionKind.Sleep:
+                Suspend(false);
+                break;
+            case PowerActionKind.Hibernate:
+                Suspend(true);
+                break;
+            case PowerActionKind.Lock:
+                if (!LockWorkStation()) throw new Win32Exception(Marshal.GetLastWin32Error());
+                break;
+        }
+    }
+
+    private static void Suspend(bool hibernate)
+    {
+        EnableShutdownPrivilege();
+        if (!SetSuspendState(hibernate, false, false))
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+    }
 
     public static void DisconnectRdp()
     {
@@ -73,6 +106,14 @@ public static class SystemActions
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool ExitWindowsEx(uint uFlags, uint dwReason);
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool LockWorkStation();
+    [DllImport("powrprof.dll", SetLastError = true)]
+    private static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
+    [DllImport("powrprof.dll")]
+    private static extern bool IsPwrSuspendAllowed();
+    [DllImport("powrprof.dll")]
+    private static extern bool IsPwrHibernateAllowed();
     [DllImport("advapi32.dll", SetLastError = true)]
     private static extern bool OpenProcessToken(nint ProcessHandle, uint DesiredAccess, out nint TokenHandle);
     [DllImport("kernel32.dll")]

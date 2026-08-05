@@ -30,6 +30,10 @@ public sealed class SettingsStore
 
             Current = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath)) ?? new AppSettings();
             Current.CountdownSeconds = Math.Clamp(Current.CountdownSeconds, 1, 300);
+            if (Current.EnabledActions == EnabledPowerActions.None)
+                Current.EnabledActions = EnabledPowerActions.Shutdown | EnabledPowerActions.Restart;
+            if (!Current.EnabledActions.HasFlag(Current.DefaultAction.ToFlag()))
+                Current.DefaultAction = Current.EnabledActions.FirstAction();
         }
         catch (Exception ex)
         {
@@ -82,5 +86,25 @@ public sealed class SettingsStore
         {
             Debug.WriteLine(ex);
         }
+    }
+}
+
+internal static class PowerActionSettingsExtensions
+{
+    public static EnabledPowerActions ToFlag(this PowerActionKind action) => action switch
+    {
+        PowerActionKind.Shutdown => EnabledPowerActions.Shutdown,
+        PowerActionKind.Restart => EnabledPowerActions.Restart,
+        PowerActionKind.Sleep => EnabledPowerActions.Sleep,
+        PowerActionKind.Hibernate => EnabledPowerActions.Hibernate,
+        PowerActionKind.Lock => EnabledPowerActions.Lock,
+        _ => EnabledPowerActions.None
+    };
+
+    public static PowerActionKind FirstAction(this EnabledPowerActions actions)
+    {
+        foreach (PowerActionKind action in Enum.GetValues<PowerActionKind>())
+            if (actions.HasFlag(action.ToFlag())) return action;
+        return PowerActionKind.Shutdown;
     }
 }
