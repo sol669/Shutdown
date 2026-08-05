@@ -74,6 +74,16 @@ internal static class NativeTheme
         }
     }
 
+    internal static bool IsTaskbarDark()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            return Convert.ToInt32(key?.GetValue("SystemUsesLightTheme", 0)) == 0;
+        }
+        catch { return true; }
+    }
+
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(nint hwnd, int attribute, ref int value, int size);
 

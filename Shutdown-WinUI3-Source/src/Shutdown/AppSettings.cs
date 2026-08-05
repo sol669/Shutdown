@@ -7,10 +7,24 @@ public enum ConfirmationMode
     Countdown
 }
 
-public enum DefaultPowerAction
+public enum PowerActionKind
 {
     Shutdown,
-    Restart
+    Restart,
+    Sleep,
+    Hibernate,
+    Lock
+}
+
+[System.Flags]
+public enum EnabledPowerActions
+{
+    None = 0,
+    Shutdown = 1 << 0,
+    Restart = 1 << 1,
+    Sleep = 1 << 2,
+    Hibernate = 1 << 3,
+    Lock = 1 << 4
 }
 
 public enum AppTheme
@@ -29,10 +43,12 @@ public enum AppLanguage
 public sealed class AppSettings
 {
     public ConfirmationMode ConfirmationMode { get; set; } = ConfirmationMode.Countdown;
-    public DefaultPowerAction DefaultAction { get; set; } = DefaultPowerAction.Shutdown;
+    public PowerActionKind DefaultAction { get; set; } = PowerActionKind.Shutdown;
+    public EnabledPowerActions EnabledActions { get; set; } =
+        EnabledPowerActions.Shutdown | EnabledPowerActions.Restart;
     public int CountdownSeconds { get; set; } = 5;
     public bool ShowRdpMenu { get; set; } = true;
-    public bool EnableRdpHotkey { get; set; } = true;
+    public bool ShowScheduledActions { get; set; } = true;
     public bool StartWithWindows { get; set; } = true;
     public AppTheme Theme { get; set; } = AppTheme.System;
     public AppLanguage Language { get; set; } = DetectLanguage();

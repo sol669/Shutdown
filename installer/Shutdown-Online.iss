@@ -4,7 +4,7 @@
 #define AppURL "https://github.com/sol669/Shutdown"
 
 #ifndef AppVersion
-  #define AppVersion "1.0.1"
+  #define AppVersion "1.1.0"
 #endif
 
 #ifndef PublishDir
@@ -24,7 +24,7 @@ DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir=..\release
 OutputBaseFilename=Shutdown-Trey-Setup-v{#AppVersion}
-SetupIconFile=..\Shutdown-WinUI3-Source\src\Shutdown\Assets\Off.ico
+SetupIconFile=..\Shutdown-WinUI3-Source\src\Shutdown\Assets\ShutdownTrey.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 WizardStyle=modern
 PrivilegesRequired=admin
