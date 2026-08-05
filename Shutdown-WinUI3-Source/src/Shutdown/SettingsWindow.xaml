@@ -146,7 +146,6 @@
                     </Grid>
                 </Border>
 
-                <TextBlock x:Name="InterfaceSection" Style="{StaticResource SectionLabelStyle}" Margin="2,13,0,1"/>
                 <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>

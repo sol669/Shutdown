@@ -83,7 +83,7 @@ public sealed partial class SettingsWindow : Window
     {
         bool ru = _store.Current.Language == AppLanguage.Russian;
         TitleText.Text = ru ? "Настройки" : "Settings";
-        ActionsSection.Text = ru ? "ДЕЙСТВИЯ" : "ACTIONS";
+        ActionsSection.Text = ru ? "ДЕЙСТВИЯ В ТРЕЕ" : "TRAY ACTIONS";
         ShutdownLabel.Text = Strings.ActionName(PowerActionKind.Shutdown);
         RestartLabel.Text = Strings.ActionName(PowerActionKind.Restart);
         SleepLabel.Text = Strings.ActionName(PowerActionKind.Sleep);
@@ -98,9 +98,8 @@ public sealed partial class SettingsWindow : Window
         CountdownLabel.Text = ru ? "Обратный отсчёт, сек." : "Countdown, sec.";
         ScheduledMenuLabel.Text = ru ? "Отложенные действия в меню" : "Scheduled actions in menu";
         SystemSection.Text = ru ? "СИСТЕМА" : "SYSTEM";
-        RdpLabel.Text = ru ? "Отключиться от RDP" : "Disconnect from RDP";
+        RdpLabel.Text = ru ? "Отключиться — действие по умолчанию при RDP-подключении" : "Disconnect — default action during an RDP session";
         AutostartLabel.Text = ru ? "Автозапуск" : "Autostart";
-        InterfaceSection.Text = ru ? "ИНТЕРФЕЙС" : "INTERFACE";
         ThemeLabel.Text = ru ? "Тема" : "Theme";
         SystemThemeItem.Content = ru ? "Как в Windows" : "Use Windows setting";
         LightThemeItem.Content = ru ? "Светлая" : "Light";

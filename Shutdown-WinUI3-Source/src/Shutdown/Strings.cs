@@ -21,7 +21,7 @@ public static class Strings
         _ => action.ToString()
     };
 
-    public static string DisconnectRdp => Ru ? "Отключиться от RDP" : "Disconnect from RDP";
+    public static string DisconnectRdp => Ru ? "Отключиться" : "Disconnect";
     public static string Settings => Ru ? "Настройки" : "Settings";
     public static string Exit => Ru ? "Выход" : "Exit";
     public static string ScheduledAction => Ru ? "Отложенное действие" : "Scheduled action";
