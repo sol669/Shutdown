@@ -10,6 +10,7 @@ internal static class NativeMethods
     internal const uint WM_DESTROY = 0x0002;
     internal const uint WM_HOTKEY = 0x0312;
     internal const uint WM_POWERBROADCAST = 0x0218;
+    internal const uint WM_WTSSESSION_CHANGE = 0x02B1;
     internal const uint PBT_APMRESUMEAUTOMATIC = 0x0012;
     internal const uint WM_LBUTTONDBLCLK = 0x0203;
     internal const uint WM_RBUTTONUP = 0x0205;
@@ -35,6 +36,10 @@ internal static class NativeMethods
     internal const uint IMAGE_ICON = 1;
     internal const uint LR_LOADFROMFILE = 0x0010;
     internal const uint LR_DEFAULTSIZE = 0x0040;
+    internal const uint WTS_CURRENT_SESSION = 0xFFFFFFFF;
+    internal const int WTS_CLIENT_PROTOCOL_TYPE = 16;
+    internal const uint NOTIFY_FOR_THIS_SESSION = 0;
+    internal const int SM_REMOTESESSION = 0x1000;
 
     internal delegate nint WndProc(nint hWnd, uint msg, nuint wParam, nint lParam);
 
@@ -116,4 +121,15 @@ internal static class NativeMethods
     internal static extern nint LoadImage(nint hInst, string name, uint type, int cx, int cy, uint fuLoad);
     [DllImport("user32.dll")]
     internal static extern bool DestroyIcon(nint hIcon);
+    [DllImport("user32.dll")]
+    internal static extern int GetSystemMetrics(int nIndex);
+    [DllImport("wtsapi32.dll", SetLastError = true)]
+    internal static extern bool WTSRegisterSessionNotification(nint hWnd, uint dwFlags);
+    [DllImport("wtsapi32.dll", SetLastError = true)]
+    internal static extern bool WTSUnRegisterSessionNotification(nint hWnd);
+    [DllImport("wtsapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool WTSQuerySessionInformation(nint hServer, uint sessionId, int infoClass,
+        out nint ppBuffer, out uint pBytesReturned);
+    [DllImport("wtsapi32.dll")]
+    internal static extern void WTSFreeMemory(nint memory);
 }

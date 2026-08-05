@@ -47,7 +47,7 @@ public sealed class AppSettings
     public EnabledPowerActions EnabledActions { get; set; } =
         EnabledPowerActions.Shutdown | EnabledPowerActions.Restart;
     public int CountdownSeconds { get; set; } = 5;
-    public bool ShowRdpMenu { get; set; } = true;
+    public bool UseRdpAsDefaultAction { get; set; } = true;
     public bool ShowScheduledActions { get; set; } = true;
     public bool StartWithWindows { get; set; } = true;
     public AppTheme Theme { get; set; } = AppTheme.System;

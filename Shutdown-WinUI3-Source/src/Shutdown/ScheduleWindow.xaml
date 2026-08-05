@@ -26,12 +26,20 @@
             <Grid ColumnSpacing="14">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="DateLabel" VerticalAlignment="Center"/>
-                <CalendarDatePicker x:Name="ActionDate" Grid.Column="1" HorizontalAlignment="Stretch"/>
+                <CalendarDatePicker x:Name="ActionDate" Grid.Column="1" HorizontalAlignment="Stretch"
+                                    Height="40" VerticalAlignment="Center"
+                                    BorderThickness="1" CornerRadius="4"
+                                    BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                                    Background="{ThemeResource ControlFillColorDefaultBrush}"/>
             </Grid>
             <Grid ColumnSpacing="14">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                 <TextBlock x:Name="TimeLabel" VerticalAlignment="Center"/>
-                <TimePicker x:Name="ActionTime" Grid.Column="1" ClockIdentifier="24HourClock" HorizontalAlignment="Stretch"/>
+                <TimePicker x:Name="ActionTime" Grid.Column="1" ClockIdentifier="24HourClock"
+                            HorizontalAlignment="Stretch" Height="40" VerticalAlignment="Center"
+                            BorderThickness="1" CornerRadius="4"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            Background="{ThemeResource ControlFillColorDefaultBrush}"/>
             </Grid>
         </StackPanel>
 

@@ -44,7 +44,7 @@
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollMode="Auto" HorizontalScrollMode="Disabled"
                       HorizontalContentAlignment="Stretch">
-            <StackPanel MaxWidth="820" HorizontalAlignment="Stretch" Spacing="5">
+            <StackPanel MaxWidth="820" HorizontalAlignment="Stretch" Spacing="5" Margin="0,0,18,0">
                 <TextBlock x:Name="ActionsSection" Style="{StaticResource SectionLabelStyle}" />
 
                 <Border Style="{StaticResource SettingsCardStyle}">
@@ -112,6 +112,10 @@
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="126"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="CountdownLabel" VerticalAlignment="Center"/>
                         <NumberBox x:Name="CountdownNumber" Grid.Column="1" Minimum="1" Maximum="300"
+                                   Height="38" VerticalAlignment="Center"
+                                   BorderThickness="1" CornerRadius="4"
+                                   BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                                   Background="{ThemeResource ControlFillColorDefaultBrush}"
                                    SpinButtonPlacementMode="Compact"/>
                     </Grid>
                 </Border>

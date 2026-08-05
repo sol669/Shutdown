@@ -32,6 +32,9 @@ public sealed class TrayService : IDisposable
     private DateTime _lastScheduleCheck = DateTime.Now;
     private bool _warningOpen;
     private int _scheduleGeneration;
+    private bool _isRdpSession;
+
+    private bool IsRdpDefault => _isRdpSession && _settings.Current.UseRdpAsDefaultAction;
 
     public TrayService(SettingsStore settings)
     {
@@ -55,6 +58,8 @@ public sealed class TrayService : IDisposable
         NativeMethods.RegisterClassEx(ref wc);
         _window = NativeMethods.CreateWindowEx(0, className, "Shutdown Trey", 0, 0, 0, 0, 0,
             nint.Zero, nint.Zero, instance, nint.Zero);
+        NativeMethods.WTSRegisterSessionNotification(_window, NativeMethods.NOTIFY_FOR_THIS_SESSION);
+        _isRdpSession = RdpSession.IsCurrentSessionRemote();
 
         LoadTrayIcon();
         _notifyData = new NativeMethods.NOTIFYICONDATA
@@ -62,7 +67,7 @@ public sealed class TrayService : IDisposable
             cbSize = (uint)Marshal.SizeOf<NativeMethods.NOTIFYICONDATA>(), hWnd = _window, uID = 1,
             uFlags = NativeMethods.NIF_MESSAGE | NativeMethods.NIF_ICON | NativeMethods.NIF_TIP,
             uCallbackMessage = TrayMessage, hIcon = _trayIcon,
-            szTip = Strings.TrayTip(_settings.Current.DefaultAction, null, null),
+            szTip = CurrentTrayTip(),
             szInfo = string.Empty, szInfoTitle = string.Empty
         };
         NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_ADD, ref _notifyData);
@@ -72,10 +77,10 @@ public sealed class TrayService : IDisposable
 
     private void LoadTrayIcon()
     {
-        string action = _settings.Current.DefaultAction.ToString().ToLowerInvariant();
+        string action = IsRdpDefault ? "rdp" : _settings.Current.DefaultAction.ToString().ToLowerInvariant();
         string scheduled = _scheduledAction is null ? string.Empty : "_scheduled";
         string tone = NativeTheme.IsTaskbarDark() ? "white" : "black";
-        string key = $"tray_{action}{scheduled}_{tone}.ico";
+        string key = IsRdpDefault ? $"tray_rdp_{tone}.ico" : $"tray_{action}{scheduled}_{tone}.ico";
         if (_trayIconKey == key && _trayIcon != nint.Zero) return;
         if (_trayIcon != nint.Zero) NativeMethods.DestroyIcon(_trayIcon);
         string path = Path.Combine(AppContext.BaseDirectory, "Assets", key);
@@ -88,7 +93,7 @@ public sealed class TrayService : IDisposable
     {
         if (_window == nint.Zero) return;
         NativeMethods.UnregisterHotKey(_window, HotkeyId);
-        if (_settings.Current.ShowRdpMenu)
+        if (_isRdpSession)
             NativeMethods.RegisterHotKey(_window, HotkeyId,
                 NativeMethods.MOD_CONTROL | NativeMethods.MOD_ALT | NativeMethods.MOD_SHIFT, NativeMethods.VK_Q);
     }
@@ -114,7 +119,7 @@ public sealed class TrayService : IDisposable
                 uint mouseMessage = unchecked((uint)lParam.ToInt64());
                 if (mouseMessage == NativeMethods.WM_RBUTTONUP) ShowMenu();
                 else if (mouseMessage == NativeMethods.WM_LBUTTONDBLCLK)
-                    _dispatcher.TryEnqueue(() => _ = PerformPowerActionAsync(_settings.Current.DefaultAction));
+                    _dispatcher.TryEnqueue(PerformDefaultAction);
                 return nint.Zero;
             }
             if (msg == NativeMethods.WM_HOTKEY && (int)wParam == HotkeyId)
@@ -125,6 +130,11 @@ public sealed class TrayService : IDisposable
             if (msg == NativeMethods.WM_POWERBROADCAST && (uint)wParam == NativeMethods.PBT_APMRESUMEAUTOMATIC)
             {
                 _dispatcher.TryEnqueue(HandleResume);
+                return nint.Zero;
+            }
+            if (msg == NativeMethods.WM_WTSSESSION_CHANGE)
+            {
+                _dispatcher.TryEnqueue(RefreshSessionState);
                 return nint.Zero;
             }
             if (msg == NativeMethods.WM_DESTROY) return nint.Zero;
@@ -142,13 +152,18 @@ public sealed class TrayService : IDisposable
 
     private void ShowMenu()
     {
+        RefreshSessionState();
         NativeTheme.Apply(_settings.Current.Theme, _window);
         nint menu = NativeMethods.CreatePopupMenu();
         try
         {
             foreach (var action in EnabledActions())
                 NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, ActionBase + (uint)action, Strings.ActionName(action));
-            NativeMethods.SetMenuDefaultItem(menu, ActionBase + (uint)_settings.Current.DefaultAction, 0);
+            if (_isRdpSession)
+                NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRdp, Strings.DisconnectRdp + "\tCtrl+Alt+Shift+Q");
+
+            NativeMethods.SetMenuDefaultItem(menu,
+                IsRdpDefault ? IdRdp : ActionBase + (uint)_settings.Current.DefaultAction, 0);
 
             if (_settings.Current.ShowScheduledActions)
             {
@@ -175,8 +190,6 @@ public sealed class TrayService : IDisposable
                 NativeMethods.AppendMenu(menu, NativeMethods.MF_POPUP, (nuint)scheduledMenu, Strings.ScheduledAction);
             }
 
-            if (_settings.Current.ShowRdpMenu)
-                NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdRdp, Strings.DisconnectRdp + "\tCtrl+Alt+Shift+Q");
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdSettings, Strings.Settings);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_SEPARATOR, 0, null);
             NativeMethods.AppendMenu(menu, NativeMethods.MF_STRING, IdExit, Strings.Exit);
@@ -229,6 +242,24 @@ public sealed class TrayService : IDisposable
             _ => await ConfirmWindow.ShowAsync(action, current.CountdownSeconds)
         };
         if (confirmed) SystemActions.Execute(action);
+    }
+
+    private void PerformDefaultAction()
+    {
+        RefreshSessionState();
+        if (IsRdpDefault)
+            SystemActions.DisconnectRdp();
+        else
+            _ = PerformPowerActionAsync(_settings.Current.DefaultAction);
+    }
+
+    private void RefreshSessionState()
+    {
+        bool remote = RdpSession.IsCurrentSessionRemote();
+        if (_isRdpSession == remote) return;
+        _isRdpSession = remote;
+        RefreshHotkey();
+        UpdateTray();
     }
 
     private async Task ScheduleCommandAsync(PowerActionKind action, int option)
@@ -325,7 +356,7 @@ public sealed class TrayService : IDisposable
         if (_window == nint.Zero) return;
         LoadTrayIcon();
         _notifyData.hIcon = _trayIcon;
-        _notifyData.szTip = Strings.TrayTip(_settings.Current.DefaultAction, _scheduledAction, _scheduledFor);
+        _notifyData.szTip = CurrentTrayTip();
         _notifyData.uFlags = NativeMethods.NIF_ICON | NativeMethods.NIF_TIP;
         NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_MODIFY, ref _notifyData);
     }
@@ -338,6 +369,11 @@ public sealed class TrayService : IDisposable
         _notifyData.dwInfoFlags = NativeMethods.NIIF_INFO;
         NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_MODIFY, ref _notifyData);
     }
+
+    private string CurrentTrayTip() => Strings.TrayTip(
+        IsRdpDefault ? Strings.DisconnectRdp : Strings.ActionName(_settings.Current.DefaultAction),
+        _scheduledAction,
+        _scheduledFor);
 
     private void ShowSettings()
     {
@@ -353,6 +389,7 @@ public sealed class TrayService : IDisposable
         if (_window != nint.Zero)
         {
             NativeMethods.UnregisterHotKey(_window, HotkeyId);
+            NativeMethods.WTSUnRegisterSessionNotification(_window);
             NativeMethods.Shell_NotifyIcon(NativeMethods.NIM_DELETE, ref _notifyData);
             NativeMethods.DestroyWindow(_window);
             _window = nint.Zero;

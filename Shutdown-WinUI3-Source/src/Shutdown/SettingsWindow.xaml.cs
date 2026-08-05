@@ -51,8 +51,8 @@ public sealed partial class SettingsWindow : Window
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
-            presenter.IsResizable = true;
-            presenter.IsMaximizable = true;
+            presenter.IsResizable = false;
+            presenter.IsMaximizable = false;
             presenter.IsMinimizable = true;
         }
     }
@@ -70,7 +70,7 @@ public sealed partial class SettingsWindow : Window
         ConfirmationCombo.SelectedIndex = (int)s.ConfirmationMode;
         CountdownNumber.Value = s.CountdownSeconds;
         ScheduledMenuToggle.IsOn = s.ShowScheduledActions;
-        RdpToggle.IsOn = s.ShowRdpMenu;
+        RdpToggle.IsOn = s.UseRdpAsDefaultAction;
         AutostartToggle.IsOn = s.StartWithWindows;
         ThemeCombo.SelectedIndex = (int)s.Theme;
         LanguageCombo.SelectedIndex = s.Language == AppLanguage.Russian ? 0 : 1;
@@ -98,8 +98,8 @@ public sealed partial class SettingsWindow : Window
         CountdownLabel.Text = ru ? "Обратный отсчёт, сек." : "Countdown, sec.";
         ScheduledMenuLabel.Text = ru ? "Отложенные действия в меню" : "Scheduled actions in menu";
         SystemSection.Text = ru ? "СИСТЕМА" : "SYSTEM";
-        RdpLabel.Text = ru ? "Выход из RDP и Ctrl+Alt+Shift+Q" : "RDP disconnect and Ctrl+Alt+Shift+Q";
-        AutostartLabel.Text = ru ? "Запускать вместе с Windows" : "Start with Windows";
+        RdpLabel.Text = ru ? "Отключиться от RDP" : "Disconnect from RDP";
+        AutostartLabel.Text = ru ? "Автозапуск" : "Autostart";
         InterfaceSection.Text = ru ? "ИНТЕРФЕЙС" : "INTERFACE";
         ThemeLabel.Text = ru ? "Тема" : "Theme";
         SystemThemeItem.Content = ru ? "Как в Windows" : "Use Windows setting";
@@ -193,7 +193,7 @@ public sealed partial class SettingsWindow : Window
             EnabledActions = enabled,
             CountdownSeconds = Math.Clamp((int)(double.IsNaN(CountdownNumber.Value) ? 5 : CountdownNumber.Value), 1, 300),
             ShowScheduledActions = ScheduledMenuToggle.IsOn,
-            ShowRdpMenu = RdpToggle.IsOn,
+            UseRdpAsDefaultAction = RdpToggle.IsOn,
             StartWithWindows = AutostartToggle.IsOn,
             Theme = (AppTheme)Math.Clamp(ThemeCombo.SelectedIndex, 0, 2),
             Language = LanguageCombo.SelectedIndex == 0 ? AppLanguage.Russian : AppLanguage.English

@@ -21,7 +21,7 @@ public static class Strings
         _ => action.ToString()
     };
 
-    public static string DisconnectRdp => Ru ? "Выйти из RDP" : "Disconnect RDP";
+    public static string DisconnectRdp => Ru ? "Отключиться от RDP" : "Disconnect from RDP";
     public static string Settings => Ru ? "Настройки" : "Settings";
     public static string Exit => Ru ? "Выход" : "Exit";
     public static string ScheduledAction => Ru ? "Отложенное действие" : "Scheduled action";
@@ -35,10 +35,13 @@ public static class Strings
         ? $"Запланировано: {ActionName(action).ToLowerInvariant()} в {when:HH:mm}"
         : $"Scheduled: {ActionName(action)} at {when:t}";
     public static string TrayTip(PowerActionKind defaultAction, PowerActionKind? scheduled, DateTime? when)
+        => TrayTip(ActionName(defaultAction), scheduled, when);
+
+    public static string TrayTip(string defaultAction, PowerActionKind? scheduled, DateTime? when)
     {
         string primary = Ru
-            ? $"{ActionName(defaultAction)} — двойной щелчок"
-            : $"{ActionName(defaultAction)} — double-click";
+            ? $"{defaultAction} — двойной щелчок"
+            : $"{defaultAction} — double-click";
         if (scheduled is null || when is null) return primary;
         TimeSpan left = when.Value - DateTime.Now;
         string remaining = left.TotalSeconds <= 60
