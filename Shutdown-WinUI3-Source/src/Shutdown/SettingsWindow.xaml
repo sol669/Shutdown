@@ -4,154 +4,173 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Shutdown Trey">
 
-    <Grid x:Name="RootGrid" Padding="20" RowSpacing="10">
+    <Grid x:Name="RootGrid" Padding="24,20,24,18" RowSpacing="12">
         <Grid.Resources>
-            <Style x:Key="SettingsGroupStyle" TargetType="Border">
+            <Style x:Key="SettingsCardStyle" TargetType="Border">
                 <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="MinHeight" Value="46" />
+                <Setter Property="Padding" Value="14,5" />
             </Style>
             <Style x:Key="SettingsRowStyle" TargetType="Grid">
-                <Setter Property="MinHeight" Value="40" />
-                <Setter Property="Padding" Value="14,3" />
                 <Setter Property="ColumnSpacing" Value="12" />
             </Style>
             <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="Opacity" Value="0.68" />
-                <Setter Property="Margin" Value="2,2,0,0" />
+                <Setter Property="Margin" Value="2,0,0,1" />
             </Style>
             <Style x:Key="StateTextStyle" TargetType="TextBlock">
-                <Setter Property="MinWidth" Value="66" />
+                <Setter Property="MinWidth" Value="72" />
                 <Setter Property="TextAlignment" Value="Right" />
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Opacity" Value="0.72" />
             </Style>
         </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TitleText" FontSize="28" FontWeight="SemiBold" />
+        <TextBlock x:Name="TitleText" MaxWidth="820"
+                   HorizontalAlignment="Stretch" FontSize="28" FontWeight="SemiBold" />
 
-        <StackPanel Grid.Row="1" Spacing="7">
-            <TextBlock x:Name="ActionsSection" Style="{StaticResource SectionLabelStyle}" />
-            <Border Style="{StaticResource SettingsGroupStyle}">
-                <StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollMode="Auto" HorizontalScrollMode="Disabled"
+                      HorizontalContentAlignment="Stretch">
+            <StackPanel MaxWidth="820" HorizontalAlignment="Stretch" Spacing="5">
+                <TextBlock x:Name="ActionsSection" Style="{StaticResource SectionLabelStyle}" />
+
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="ShutdownLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="ShutdownState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="ShutdownToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="ActionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="RestartLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="RestartState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="RestartToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="ActionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="SleepLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="SleepState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="SleepToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="ActionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="HibernateLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="HibernateState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="HibernateToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="ActionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="LockLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="LockState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="LockToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="ActionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="250"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="DefaultActionLabel" VerticalAlignment="Center"/>
                         <ComboBox x:Name="DefaultActionCombo" Grid.Column="1" HorizontalAlignment="Stretch"/>
                     </Grid>
-                </StackPanel>
-            </Border>
+                </Border>
 
-            <TextBlock x:Name="BehaviorSection" Style="{StaticResource SectionLabelStyle}" Margin="2,5,0,0"/>
-            <Border Style="{StaticResource SettingsGroupStyle}">
-                <StackPanel>
+                <TextBlock x:Name="BehaviorSection" Style="{StaticResource SectionLabelStyle}" Margin="2,13,0,1"/>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="250"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="ConfirmationLabel" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="ConfirmationCombo" Grid.Column="1" HorizontalAlignment="Stretch" SelectionChanged="ConfirmationCombo_SelectionChanged"><ComboBoxItem x:Name="NoConfirmationItem"/><ComboBoxItem x:Name="AskItem"/><ComboBoxItem x:Name="CountdownItem"/></ComboBox>
+                        <ComboBox x:Name="ConfirmationCombo" Grid.Column="1" HorizontalAlignment="Stretch" SelectionChanged="ConfirmationCombo_SelectionChanged">
+                            <ComboBoxItem x:Name="NoConfirmationItem"/>
+                            <ComboBoxItem x:Name="AskItem"/>
+                            <ComboBoxItem x:Name="CountdownItem"/>
+                        </ComboBox>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
-                    <Grid x:Name="CountdownRow" Style="{StaticResource SettingsRowStyle}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="160"/></Grid.ColumnDefinitions>
+                </Border>
+                <Border x:Name="CountdownCard" Style="{StaticResource SettingsCardStyle}">
+                    <Grid Style="{StaticResource SettingsRowStyle}">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="126"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="CountdownLabel" VerticalAlignment="Center"/>
-                        <NumberBox x:Name="CountdownNumber" Grid.Column="1" Minimum="1" Maximum="300" SpinButtonPlacementMode="Inline"/>
+                        <NumberBox x:Name="CountdownNumber" Grid.Column="1" Minimum="1" Maximum="300"
+                                   SpinButtonPlacementMode="Compact"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="ScheduledMenuLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="ScheduledMenuState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="ScheduledMenuToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="OptionToggle_Toggled"/>
                     </Grid>
-                </StackPanel>
-            </Border>
+                </Border>
 
-            <TextBlock x:Name="SystemSection" Style="{StaticResource SectionLabelStyle}" Margin="2,5,0,0"/>
-            <Border Style="{StaticResource SettingsGroupStyle}">
-                <StackPanel>
+                <TextBlock x:Name="SystemSection" Style="{StaticResource SectionLabelStyle}" Margin="2,13,0,1"/>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="RdpLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="RdpState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="RdpToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="OptionToggle_Toggled"/>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="AutostartLabel" VerticalAlignment="Center"/>
                         <TextBlock x:Name="AutostartState" Grid.Column="1" Style="{StaticResource StateTextStyle}"/>
                         <ToggleSwitch x:Name="AutostartToggle" Grid.Column="2" OffContent="" OnContent="" Toggled="OptionToggle_Toggled"/>
                     </Grid>
-                </StackPanel>
-            </Border>
+                </Border>
 
-            <TextBlock x:Name="InterfaceSection" Style="{StaticResource SectionLabelStyle}" Margin="2,5,0,0"/>
-            <Border Style="{StaticResource SettingsGroupStyle}">
-                <StackPanel>
+                <TextBlock x:Name="InterfaceSection" Style="{StaticResource SectionLabelStyle}" Margin="2,13,0,1"/>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="250"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="ThemeLabel" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="ThemeCombo" Grid.Column="1" HorizontalAlignment="Stretch"><ComboBoxItem x:Name="SystemThemeItem"/><ComboBoxItem x:Name="LightThemeItem"/><ComboBoxItem x:Name="DarkThemeItem"/></ComboBox>
+                        <ComboBox x:Name="ThemeCombo" Grid.Column="1" HorizontalAlignment="Stretch">
+                            <ComboBoxItem x:Name="SystemThemeItem"/><ComboBoxItem x:Name="LightThemeItem"/><ComboBoxItem x:Name="DarkThemeItem"/>
+                        </ComboBox>
                     </Grid>
-                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="14,0,0,0"/>
+                </Border>
+                <Border Style="{StaticResource SettingsCardStyle}">
                     <Grid Style="{StaticResource SettingsRowStyle}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="250"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="280"/></Grid.ColumnDefinitions>
                         <TextBlock x:Name="LanguageLabel" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="LanguageCombo" Grid.Column="1" HorizontalAlignment="Stretch"><ComboBoxItem Content="Русский"/><ComboBoxItem Content="English"/></ComboBox>
+                        <ComboBox x:Name="LanguageCombo" Grid.Column="1" HorizontalAlignment="Stretch">
+                            <ComboBoxItem Content="Русский"/><ComboBoxItem Content="English"/>
+                        </ComboBox>
                     </Grid>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,8,0,10">
+                    <TextBlock Text="Shutdown Trey 1.1.1 · sol669 ·" VerticalAlignment="Center" Opacity="0.68"/>
+                    <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/sol669/Shutdown" Padding="0"/>
                 </StackPanel>
-            </Border>
-
-            <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,3,0,0">
-                <TextBlock Text="Shutdown Trey 1.1.1 · sol669 ·" VerticalAlignment="Center" Opacity="0.68"/>
-                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/sol669/Shutdown" Padding="0"/>
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
 
-        <Grid Grid.Row="2" ColumnSpacing="10" Padding="0,2,0,0">
+        <Grid Grid.Row="2" MaxWidth="820" HorizontalAlignment="Stretch"
+              ColumnSpacing="10" Padding="0,2,0,0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <Button x:Name="CancelButton" Grid.Column="1" MinWidth="110" Click="CancelButton_Click"/>
             <Button x:Name="SaveButton" Grid.Column="2" MinWidth="110" Style="{StaticResource AccentButtonStyle}" Click="SaveButton_Click"/>

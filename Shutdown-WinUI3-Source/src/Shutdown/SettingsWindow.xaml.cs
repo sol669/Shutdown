@@ -36,14 +36,14 @@ public sealed partial class SettingsWindow : Window
         AppWindow appWindow = AppWindow.GetFromWindowId(id);
         appWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "ShutdownTrey.ico"));
 
-        const int logicalWidth = 700;
-        const int logicalHeight = 840;
+        const int logicalWidth = 760;
+        const int logicalHeight = 900;
         double scale = Math.Max(1, GetDpiForWindow(hwnd) / 96.0);
-        int width = (int)Math.Round(logicalWidth * scale);
-        int height = (int)Math.Round(logicalHeight * scale);
         NativeMethods.GetCursorPos(out var cursor);
         DisplayArea area = DisplayArea.GetFromPoint(new Windows.Graphics.PointInt32(cursor.X, cursor.Y), DisplayAreaFallback.Primary);
         var work = area.WorkArea;
+        int width = Math.Min((int)Math.Round(logicalWidth * scale), Math.Max(640, work.Width - 48));
+        int height = Math.Min((int)Math.Round(logicalHeight * scale), Math.Max(650, work.Height - 48));
         appWindow.MoveAndResize(new Windows.Graphics.RectInt32(
             work.X + Math.Max(0, (work.Width - width) / 2),
             work.Y + Math.Max(0, (work.Height - height) / 2), width, height));
@@ -51,9 +51,9 @@ public sealed partial class SettingsWindow : Window
         appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         if (appWindow.Presenter is OverlappedPresenter presenter)
         {
-            presenter.IsResizable = false;
-            presenter.IsMaximizable = false;
-            presenter.IsMinimizable = false;
+            presenter.IsResizable = true;
+            presenter.IsMaximizable = true;
+            presenter.IsMinimizable = true;
         }
     }
 
@@ -173,8 +173,7 @@ public sealed partial class SettingsWindow : Window
     private void UpdateCountdownState()
     {
         bool active = ConfirmationCombo.SelectedIndex == (int)ConfirmationMode.Countdown;
-        CountdownRow.Opacity = active ? 1 : 0.45;
-        CountdownNumber.IsEnabled = active;
+        CountdownCard.Visibility = active ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)

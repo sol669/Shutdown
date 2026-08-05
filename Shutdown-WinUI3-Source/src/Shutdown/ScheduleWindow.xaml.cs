@@ -25,13 +25,15 @@ public sealed partial class ScheduleWindow : Window
             : $"When should “{Strings.ActionName(action)}” be performed?";
         MinutesItem.Content = ru ? "минут" : "minutes";
         HoursItem.Content = ru ? "часов" : "hours";
+        DateLabel.Text = ru ? "Дата" : "Date";
+        TimeLabel.Text = ru ? "Время" : "Time";
         CancelButton.Content = Strings.Cancel;
         ScheduleButton.Content = Strings.Schedule;
         IntervalPanel.Visibility = exactTime ? Visibility.Collapsed : Visibility.Visible;
         DateTimePanel.Visibility = exactTime ? Visibility.Visible : Visibility.Collapsed;
         DateTime initial = DateTime.Now.AddHours(1);
         ActionDate.Date = new DateTimeOffset(initial.Date);
-        ActionDate.MinYear = new DateTimeOffset(DateTime.Today);
+        ActionDate.MinDate = new DateTimeOffset(DateTime.Today);
         ActionTime.Time = initial.TimeOfDay;
         RootGrid.RequestedTheme = App.Settings.Current.Theme switch
         {
@@ -60,8 +62,8 @@ public sealed partial class ScheduleWindow : Window
             presenter.IsMinimizable = false;
         }
         double scale = Math.Max(1, GetDpiForWindow(hwnd) / 96.0);
-        int width = (int)Math.Round(680 * scale);
-        int height = (int)Math.Round(225 * scale);
+        int width = (int)Math.Round((_exactTime ? 620 : 560) * scale);
+        int height = (int)Math.Round((_exactTime ? 300 : 240) * scale);
         NativeMethods.GetCursorPos(out var cursor);
         DisplayArea area = DisplayArea.GetFromPoint(new Windows.Graphics.PointInt32(cursor.X, cursor.Y), DisplayAreaFallback.Primary);
         var work = area.WorkArea;
@@ -80,7 +82,8 @@ public sealed partial class ScheduleWindow : Window
         DateTime when;
         if (_exactTime)
         {
-            DateTime date = ActionDate.Date.LocalDateTime.Date;
+            if (ActionDate.Date is not DateTimeOffset selectedDate) return;
+            DateTime date = selectedDate.LocalDateTime.Date;
             when = date + ActionTime.Time;
             if (when <= DateTime.Now) return;
         }
